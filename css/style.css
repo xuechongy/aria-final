@@ -4007,11 +4007,8 @@ body .ch4-bubble-tray {
 }
 
 #scene-chapter2 #ch2-mic-btn {
-  min-width: 52px;
-  padding-left: 10px;
-  padding-right: 10px;
-  font-size: 18px;
-  line-height: 1;
+  min-width: 104px;
+  white-space: nowrap;
 }
 
 #scene-chapter2 #ch2-mic-btn:disabled {

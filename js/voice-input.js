@@ -45,7 +45,7 @@ function initVoiceInput() {
 
   recognition.onstart = function () {
     isListening = true;
-    micBtn.textContent = '⏺';
+    micBtn.textContent = '⏺ Listening…';
     micBtn.style.color = '#e05555';
     micBtn.title = 'Listening… click to stop / 正在聆听…点击停止';
   };
@@ -79,7 +79,7 @@ function initVoiceInput() {
 function resetMicButton() {
   const micBtn = document.getElementById('ch2-mic-btn');
   if (!micBtn) return;
-  micBtn.textContent = '🎤';
+  micBtn.textContent = 'Voice input';
   micBtn.style.color = '';
   micBtn.title = 'Voice input / 语音输入';
 }

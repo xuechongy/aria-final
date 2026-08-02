@@ -403,7 +403,13 @@
         <div id="ch2-chatframe">
           <div class="history-box" id="ch2-history"></div>
           <div class="input-area">
-            <input type="text" id="ch2-input" placeholder="Message ARIA..." />
+            <input
+              type="text"
+              id="ch2-input"
+              placeholder="Message ARIA..."
+              onkeydown="handleCh2Input(event)"
+            />
+            <button class="btn" id="ch2-send-btn" onclick="sendPrompt()">Send</button>
             <button
               class="btn"
               id="ch2-mic-btn"
@@ -412,9 +418,8 @@
               title="Voice input / 语音输入"
               aria-label="Voice input"
             >
-              🎤
+              Voice input
             </button>
-            <button class="btn" id="ch2-send-btn" onclick="sendPrompt()">Send</button>
           </div>
         </div>
         <div class="status-text">Answer attempts: <span id="ch2-attempts-left">0/3</span></div>
