@@ -404,6 +404,16 @@
           <div class="history-box" id="ch2-history"></div>
           <div class="input-area">
             <input type="text" id="ch2-input" placeholder="Message ARIA..." />
+            <button
+              class="btn"
+              id="ch2-mic-btn"
+              type="button"
+              onclick="toggleVoiceInput()"
+              title="Voice input / 语音输入"
+              aria-label="Voice input"
+            >
+              🎤
+            </button>
             <button class="btn" id="ch2-send-btn" onclick="sendPrompt()">Send</button>
           </div>
         </div>
@@ -1190,6 +1200,7 @@
     <script src="js/briefing.js"></script>
     <script src="js/chapter1.js"></script>
     <script src="js/chapter2.js"></script>
+    <script src="js/voice-input.js"></script>
     <script src="js/chapter3.js"></script>
     <script src="js/chapter4.js"></script>
   </body>
