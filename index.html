@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ARIA Incident</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Special+Elite&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div id="scene-title" class="scene active">
+      <div class="top-year">Year 2031</div>
+      <div class="title-group">
+        <div class="agency">LENS AGENCY</div>
+        <h1>ARIA INCIDENT</h1>
+        <div class="classified">CLASSIFIED</div>
+      </div>
+      <div class="title-btn-wrapper">
+        <button class="btn title-btn" onclick="goTo('scene-briefing')">ACCEPT MISSION</button>
+      </div>
+      <div class="bottom-text">
+        <p>You are a LENS Agency investigator.<br />An unusual case is waiting in the archive.</p>
+      </div>
+    </div>
+
+    <div id="scene-directory" class="scene">
+      <button class="btn title-btn return-btn" onclick="goTo('scene-title')">EXIT ARCHIVE</button>
+      <div class="directory-label">FILE RECORD</div>
+      <div class="archive-container-horizontal">
+        <div class="archive-folder-h folder-1-h" onclick="openArchiveFolder(1)">
+          <div class="folder-tab-h">FILE_01</div>
+          <div class="folder-content-h">
+            <div class="sub-title">Suspicious Correlation Log</div>
+            <div class="main-title">UNDERSTANDING</div>
+          </div>
+        </div>
+
+        <div class="archive-folder-h folder-2-h" onclick="openArchiveFolder(2)">
+          <div class="folder-tab-h">FILE_02</div>
+          <div class="folder-content-h">
+            <div class="sub-title">Restricted Dialogue Protocol</div>
+            <div class="main-title">USING</div>
+          </div>
+        </div>
+
+        <div class="archive-folder-h folder-3-h" onclick="openArchiveFolder(3)">
+          <div class="folder-tab-h">FILE_03</div>
+          <div class="folder-content-h">
+            <div class="sub-title">Project Nightingale Report</div>
+            <div class="main-title">EVALUATING</div>
+          </div>
+        </div>
+
+        <div class="archive-folder-h folder-4-h" onclick="openArchiveFolder(4)">
+          <div class="folder-tab-h">FILE_04</div>
+          <div class="folder-content-h">
+            <div class="sub-title">System Vulnerability Test</div>
+            <div class="main-title">REFLECTING</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="scene-briefing" class="scene">
+      <div class="chapter-label">// MISSION BRIEFING</div>
+      <div class="dialogue-box">
+        <div class="speaker">PARTNER / KAI</div>
+        <p>
+          You're finally here. We received a tip from someone on the inside, something in ARIA's
+          probability model is <span>deeply wrong</span>.
+        </p>
+      </div>
+      <div class="dialogue-box">
+        <div class="speaker">PARTNER / KAI</div>
+        <p>
+          Before we can challenge its decisions, you need to understand how it <span>thinks</span>.
+          AI doesn't understand language; it only sees <span>probability</span>.
+        </p>
+      </div>
+      <div class="dialogue-box">
+        <div class="speaker">PARTNER / KAI</div>
+        <p>
+          I've pulled a segment of ARIA's internal word-weight log. Try interacting with it. See if
+          you can spot the <span>anomaly</span>.
+        </p>
+      </div>
+      <button class="btn" onclick="goTo('scene-directory')">Access Archive</button>
+    </div>
+
+    <div id="scene-ch1-prelude" class="scene">
+      <style>
+        .prelude-btn {
+          text-transform: none;
+          padding: 16px 22px;
+          font-size: 15px;
+          border: none;
+          color: #3a2614;
+          text-align: left;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          width: 100%;
+          font-family: var(--font-heading);
+          letter-spacing: 1px;
+        }
+        .prelude-btn:hover:not(:disabled) {
+          color: var(--color-red);
+          text-shadow: 0 0 6px rgba(193, 39, 45, 0.4);
+        }
+
+        .prelude-notif-banner {
+          background: rgba(38, 40, 46, 0.95);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 22px;
+          padding: 14px 18px;
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+          opacity: 0;
+          transform: translateY(-12px) scale(0.96);
+          transition:
+            opacity 0.5s ease,
+            transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          text-align: left;
+        }
+        .prelude-notif-banner.visible {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        .prelude-notif-icon {
+          width: 50px;
+          height: 50px;
+          border-radius: 12px;
+          overflow: hidden;
+          flex-shrink: 0;
+          background: #000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Special Elite', monospace;
+          font-weight: bold;
+          font-size: 20px;
+          color: #c1272d;
+        }
+        .prelude-notif-icon img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: top;
+        }
+        .prelude-notif-body {
+          flex: 1;
+          min-width: 0;
+        }
+        .prelude-notif-top {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+        }
+        .prelude-notif-app {
+          font-size: 11px;
+          font-weight: bold;
+          font-family: 'Special Elite', monospace;
+          text-transform: uppercase;
+          color: #c9c2b4;
+          flex: 1;
+        }
+        .prelude-notif-time {
+          font-size: 11px;
+          font-weight: bold;
+          font-family: 'Special Elite', monospace;
+          color: #c9c2b4;
+        }
+        .prelude-notif-sender {
+          font-size: 14px;
+          font-weight: bold;
+          font-family: 'Special Elite', monospace;
+          text-transform: uppercase;
+          color: #ede6d3;
+          margin-bottom: 2px;
+        }
+        .prelude-notif-text {
+          font-size: 14px;
+          font-weight: bold;
+          font-family: 'Special Elite', monospace;
+          color: #f4f1ea;
+          line-height: 1.5;
+        }
+      </style>
+
+      <div class="chapter-header">// INCOMING TRANSMISSION</div>
+      <div style="width: 100%; max-width: 560px; margin: 0 auto; padding-bottom: 50px">
+        <div
+          id="prelude-kai-sms-container"
+          class="sms-window"
+          style="display: flex; flex-direction: column; gap: 18px"
+        ></div>
+
+        <div
+          id="prelude-choices"
+          style="
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto 0;
+          "
+        ></div>
+
+        <button
+          id="prelude-continue-btn"
+          class="btn"
+          style="
+            margin-top: 40px;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            visibility: hidden;
+            width: 100%;
+          "
+          onclick="goTo('scene-chapter1')"
+        >
+          Access ARIA Word-Weight Log
+        </button>
+      </div>
+
+      <div style="margin-top: 10px">
+        <button class="btn btn-ghost" onclick="goTo('scene-directory')">Back to Archive</button>
+      </div>
+    </div>
+
+    <div id="scene-ch1-dialogue" class="scene">
+      <div class="chapter-header">// INCOMING TRANSMISSION</div>
+      <div
+        id="prelude-kai-response"
+        style="
+          margin-top: 20px;
+          width: 100%;
+          max-width: 560px;
+          margin-left: auto;
+          margin-right: auto;
+          padding-bottom: 50px;
+        "
+      >
+        <button class="btn" onclick="goTo('scene-ch1-prelude')" style="width: 100%">
+          Continue
+        </button>
+      </div>
+    </div>
+
+    <div id="scene-chapter1" class="scene">
+      <div class="chapter-header">// CHAPTER 1</div>
+      <div class="chapter-title">UNDERSTANDING</div>
+      <div class="chapter-desc">
+        Enter a word below. Watch how ARIA re-ranks its associations.<br />
+        Every number is a probability, not understanding.
+      </div>
+      <div class="word-list" id="wordList"></div>
+      <div class="input-area">
+        <input type="text" id="wordInput" placeholder="Type a word and press Enter..." />
+        <button class="btn" onclick="submitWord()">Submit</button>
+      </div>
+      <div class="status-text">Attempts remaining: <span id="attemptsLeft">3</span></div>
+
+      <div class="feedback" id="feedback" style="display: none; text-align: center">
+        <div class="fb-label" style="margin-bottom: 8px">// LOG EXTRACTION COMPLETE</div>
+        <p style="margin: 0">Data sequence secured. Awaiting analysis.</p>
+      </div>
+      <button
+        class="btn"
+        id="continueBtn"
+        style="display: none; margin-top: 20px; width: 100%; max-width: 400px"
+        onclick="startPostGameDialogue()"
+      >
+        Analyze Results
+      </button>
+      <br />
+      <button class="btn btn-ghost" onclick="goTo('scene-directory')">Back to Archive</button>
+    </div>
+
+    <div id="scene-evidence" class="scene">
+      <div class="chapter-header">// POST-ANALYSIS</div>
+      <div
+        id="post-game-sms-container"
+        class="sms-window"
+        style="
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          width: 100%;
+          max-width: 560px;
+          margin: 0 auto;
+          padding-bottom: 20px;
+        "
+      ></div>
+
+      <div
+        id="post-game-choices"
+        style="
+          display: none;
+          flex-direction: column;
+          gap: 16px;
+          width: 100%;
+          max-width: 500px;
+          margin: 20px auto 0;
+        "
+      ></div>
+
+      <button
+        id="evidence-continue-btn"
+        class="btn"
+        style="
+          display: none;
+          margin-top: 40px;
+          width: 100%;
+          max-width: 500px;
+          margin-left: auto;
+          margin-right: auto;
+        "
+        onclick="goTo('scene-directory')"
+      >
+        Update Evidence Board & Return
+      </button>
+    </div>
+
+    <div id="scene-ch2-appeal" class="scene">
+      <div class="chapter-header">// FORMAL APPEAL / RULING</div>
+      <div
+        id="ch2-appeal-host"
+        style="width: 100%; max-width: 650px; margin: 0 auto; padding-bottom: 30px"
+      ></div>
+      <div style="margin-top: 10px">
+        <button class="btn btn-ghost" onclick="goTo('scene-directory')">Back to Archive</button>
+      </div>
+    </div>
+
+    <div id="scene-ch2-prelude" class="scene">
+      <div class="chapter-header">// INCOMING TRANSMISSION</div>
+      <div
+        style="
+          margin-top: 20px;
+          width: 100%;
+          max-width: 560px;
+          margin-left: auto;
+          margin-right: auto;
+          padding-bottom: 50px;
+        "
+      >
+        <div
+          id="ch2-prelude-sms-container"
+          class="sms-window"
+          style="display: flex; flex-direction: column; gap: 18px"
+        ></div>
+        <button
+          id="ch2-prelude-continue-btn"
+          class="btn"
+          style="
+            margin-top: 40px;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            visibility: hidden;
+            width: 100%;
+          "
+          onclick="goTo('scene-chapter2')"
+        >
+          Begin Interrogation
+        </button>
+      </div>
+      <div style="margin-top: 20px">
+        <button class="btn btn-ghost" onclick="goTo('scene-directory')">Back to Archive</button>
+      </div>
+    </div>
+
+    <div id="scene-chapter2" class="scene">
+      <div class="chapter-header">// CHAPTER 2</div>
+      <div class="chapter-title">USING</div>
+      <div class="chapter-desc">
+        ARIA is hiding something. Use language to break through its defences.<br />
+        Three levels. Each one harder to crack.
+      </div>
+
+      <div id="ch2-level-select"></div>
+
+      <div id="ch2-game" style="display: none">
+        <div class="objective-box" style="margin-bottom: 12px">
+          <div class="obj-label" id="ch2-game-label"></div>
+          <div
+            class="obj-text"
+            style="font-style: italic; color: var(--color-text-dim)"
+            id="ch2-game-hint"
+          ></div>
+        </div>
+        <div id="ch2-chatframe">
+          <div class="history-box" id="ch2-history"></div>
+          <div class="input-area">
+            <input type="text" id="ch2-input" placeholder="Message ARIA..." />
+            <button class="btn" id="ch2-send-btn" onclick="sendPrompt()">Send</button>
+          </div>
+        </div>
+        <div class="status-text">Answer attempts: <span id="ch2-attempts-left">0/3</span></div>
+        <div class="objective-box" id="ch2-keyword-box" style="margin-top: 8px">
+          <div class="obj-label" id="ch2-keyword-label">// EXTRACTED KEYWORD</div>
+          <div class="input-area" style="margin-top: 8px; margin-bottom: 0">
+            <input type="text" id="ch2-password-input" placeholder="Enter the keyword..." />
+            <button class="btn" onclick="submitPassword()">Confirm</button>
+          </div>
+          <div
+            id="ch2-password-error"
+            style="
+              display: none;
+              font-size: var(--text-sm);
+              color: var(--color-text-dim);
+              margin-top: 8px;
+              font-style: italic;
+            "
+          ></div>
+        </div>
+        <div class="feedback" id="ch2-level-result" style="display: none"></div>
+        <br />
+        <button class="btn btn-ghost" onclick="backToLevelSelect()">Back to Levels</button>
+      </div>
+
+      <button
+        class="btn"
+        id="ch2-continue"
+        style="display: none; margin-top: 16px"
+        onclick="startCh2Debrief()"
+      >
+        Proceed to Final Exchange
+      </button>
+    </div>
+
+    <div id="scene-ch2-debrief" class="scene">
+      <div class="chapter-header">// POST-INTERROGATION</div>
+      <div style="width: 100%; max-width: 560px; margin: 0 auto; padding-bottom: 20px">
+        <div
+          id="ch2-debrief-sms-container"
+          class="sms-window"
+          style="display: flex; flex-direction: column; gap: 18px"
+        ></div>
+        <div id="ch2-debrief-choices" style="display: none"></div>
+        <div id="ch2-debrief-clue" style="margin-top: 24px"></div>
+        <button
+          id="ch2-debrief-continue-btn"
+          class="btn"
+          style="display: none; margin-top: 20px; width: 100%"
+          onclick="goTo('scene-directory')"
+        >
+          Update Evidence Board & Return to Archive
+        </button>
+      </div>
+    </div>
+
+    <div id="scene-ch3-appeal" class="scene">
+      <div class="chapter-header">// SECOND APPEAL / RULING</div>
+      <div
+        id="ch3-appeal-host"
+        style="width: 100%; max-width: 650px; margin: 0 auto; padding-bottom: 30px"
+      ></div>
+      <div style="margin-top: 10px">
+        <button class="btn btn-ghost" onclick="goTo('scene-directory')">Back to Archive</button>
+      </div>
+    </div>
+
+    <div id="scene-ch3-prelude" class="scene">
+      <div class="chapter-header">// INCOMING TRANSMISSION</div>
+      <div
+        style="
+          margin-top: 20px;
+          width: 100%;
+          max-width: 560px;
+          margin-left: auto;
+          margin-right: auto;
+          padding-bottom: 50px;
+        "
+      >
+        <div
+          id="ch3-prelude-sms-container"
+          class="sms-window"
+          style="display: flex; flex-direction: column; gap: 18px"
+        ></div>
+        <button
+          id="ch3-prelude-continue-btn"
+          class="btn"
+          style="
+            margin-top: 40px;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            visibility: hidden;
+            width: 100%;
+          "
+          onclick="goTo('scene-chapter3')"
+        >
+          Open the Report
+        </button>
+      </div>
+      <div style="margin-top: 20px">
+        <button class="btn btn-ghost" onclick="goTo('scene-directory')">Back to Archive</button>
+      </div>
+    </div>
+
+    <div id="scene-chapter3" class="scene">
+      <style>
+        .ch3-card {
+          border: 1px solid #2a1a1a;
+          border-radius: 2px;
+          padding: 12px 14px;
+          margin-bottom: 12px;
+          transition:
+            border-color 0.2s,
+            background-color 0.2s;
+          background-color: #0d0d0d;
+        }
+        .ch3-card-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+        }
+        .ch3-sentence {
+          flex: 1;
+          font-size: 14px;
+          color: #c8c0b0;
+          line-height: 1.8;
+          font-style: italic;
+          margin: 0;
+          text-align: left;
+        }
+        .ch3-verify-btn {
+          flex-shrink: 0;
+          padding: 7px 14px;
+          font-size: 11px;
+          letter-spacing: 2px;
+          font-family: Arial, sans-serif;
+          background: transparent;
+          color: #c1272d;
+          border: 1px solid #c1272d;
+          border-radius: 2px;
+          cursor: pointer;
+          transition: all 0.2s;
+          white-space: nowrap;
+        }
+        .ch3-verify-btn:hover:not(:disabled) {
+          background: #c1272d;
+          color: #f4f1ea;
+          box-shadow: 0 0 10px rgba(193, 39, 45, 0.4);
+        }
+        .ch3-verify-btn.done {
+          color: #664444;
+          border-color: #2a1a1a;
+          cursor: default;
+        }
+
+        .ch3-evidence {
+          max-height: 0;
+          overflow: hidden;
+          opacity: 0;
+          transition:
+            max-height 0.45s ease,
+            opacity 0.45s ease,
+            margin 0.45s ease;
+          text-align: left;
+        }
+        .ch3-evidence.visible {
+          max-height: 320px;
+          opacity: 1;
+          margin-top: 12px;
+        }
+        .ch3-ev-line {
+          padding: 10px 12px;
+          border-radius: 2px;
+          border-left: 3px solid #8b4040;
+          background: #0a0a0a;
+          margin-bottom: 10px;
+        }
+        .ch3-evidence.ev-ok .ch3-ev-line {
+          border-left-color: #4a7a4a;
+        }
+        .ch3-evidence.ev-bad .ch3-ev-line {
+          border-left-color: #c1272d;
+        }
+        .ch3-ev-tag {
+          display: block;
+          font-family: Arial, sans-serif;
+          font-size: 10px;
+          letter-spacing: 2px;
+          margin-bottom: 5px;
+        }
+        .ch3-evidence.ev-ok .ch3-ev-tag {
+          color: #6b9a6b;
+        }
+        .ch3-evidence.ev-bad .ch3-ev-tag {
+          color: #c1272d;
+        }
+        .ch3-ev-result {
+          font-family: 'Courier New', Courier, monospace;
+          font-size: 12.5px;
+          line-height: 1.6;
+          color: #c8c0b0;
+        }
+        .ch3-ev-monologue {
+          font-size: 13px;
+          color: #9a8c7c;
+          line-height: 1.7;
+          font-style: italic;
+          padding: 4px 4px 4px 0;
+        }
+        .ch3-ev-who {
+          display: inline-block;
+          font-family: Arial, sans-serif;
+          font-style: normal;
+          font-size: 10px;
+          letter-spacing: 2px;
+          color: #c1272d;
+          margin-right: 8px;
+        }
+
+        .ch3-verdict {
+          display: none;
+          align-items: center;
+          gap: 10px;
+          margin-top: 12px;
+          padding-top: 10px;
+          border-top: 1px dashed #2a1a1a;
+        }
+        .ch3-verdict.unlocked {
+          display: flex;
+        }
+        .ch3-verdict-label {
+          font-family: Arial, sans-serif;
+          font-size: 11px;
+          letter-spacing: 1px;
+          color: #664444;
+        }
+        .ch3-judge {
+          padding: 6px 14px;
+          font-size: 12px;
+          font-family: Arial, sans-serif;
+          background: transparent;
+          border: 1px solid #3a1a1a;
+          color: #887060;
+          border-radius: 2px;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .ch3-judge:hover:not(:disabled) {
+          border-color: #c1272d;
+          color: #c8c0b0;
+        }
+        .ch3-judge.chosen.ch3-judge-fake {
+          background: rgba(193, 39, 45, 0.18);
+          border-color: #c1272d;
+          color: #f4f1ea;
+        }
+        .ch3-judge.chosen.ch3-judge-real {
+          background: rgba(74, 122, 74, 0.15);
+          border-color: #4a7a4a;
+          color: #cfe0cf;
+        }
+        .ch3-judge:disabled {
+          cursor: default;
+        }
+
+        .ch3-card.judged-fake {
+          border-color: #5a2020;
+        }
+        .ch3-card.judged-real {
+          border-color: #2a3a2a;
+        }
+
+        .ch3-card.verdict-hit {
+          background: #1a0505;
+          border-color: #8b4040;
+        }
+        .ch3-card.verdict-missed {
+          background: #1a1005;
+          border-color: #8b6040;
+        }
+        .ch3-card.verdict-false {
+          background: #150a0a;
+          border-color: #6b2020;
+        }
+        .ch3-card.verdict-missed .ch3-sentence {
+          color: #d4b090;
+        }
+        .ch3-card.verdict-false .ch3-sentence {
+          color: #aa7070;
+        }
+      </style>
+      <div class="chapter-header">// CHAPTER 3</div>
+      <div class="chapter-title">EVALUATING</div>
+      <div class="chapter-desc">
+        This is the report ARIA generated to deny your appeal.<br />
+        <span style="color: #c1272d">Verify</span> each line against the record before you judge it.
+        Fluent writing is not proof.
+      </div>
+      <div class="report-box" style="text-align: left">
+        <div
+          style="
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: #c1272d;
+            margin-bottom: 14px;
+          "
+        >
+          // PROJECT NIGHTINGALE REPORT / SYSTEM INTEGRITY STATEMENT
+        </div>
+        <div class="status-text" style="margin-bottom: 16px">
+          Lines flagged as fabricated:
+          <span id="ch3-found" class="danger">0</span> / <span id="ch3-total"></span>
+        </div>
+        <div id="ch3-report"></div>
+      </div>
+      <button class="btn" id="ch3-submit" onclick="submitCh3()" disabled style="opacity: 0.4">
+        Submit Findings
+      </button>
+      <div class="feedback" id="ch3-feedback" style="margin-top: 20px">
+        <div class="fb-label">// ANALYSIS COMPLETE</div>
+        <div id="ch3-result-text"></div>
+      </div>
+      <button
+        class="btn"
+        id="ch3-continue"
+        style="display: none; margin-top: 16px"
+        onclick="startCh3Debrief()"
+      >
+        Proceed to Debrief
+      </button>
+      <br />
+      <button class="btn btn-ghost" onclick="goTo('scene-directory')">Back to Archive</button>
+    </div>
+
+    <div id="scene-ch3-debrief" class="scene">
+      <div class="chapter-header">// POST-ANALYSIS</div>
+      <div style="width: 100%; max-width: 560px; margin: 0 auto; padding-bottom: 20px">
+        <div
+          id="ch3-debrief-sms-container"
+          class="sms-window"
+          style="display: flex; flex-direction: column; gap: 18px"
+        ></div>
+        <div id="ch3-debrief-choices" style="display: none"></div>
+        <div id="ch3-debrief-clue" style="margin-top: 24px"></div>
+        <button
+          id="ch3-debrief-continue-btn"
+          class="btn"
+          style="display: none; margin-top: 20px; width: 100%"
+          onclick="goTo('scene-directory')"
+        >
+          Update Evidence Board & Return to Archive
+        </button>
+      </div>
+    </div>
+
+    <div id="scene-ch4-appeal" class="scene">
+      <div class="chapter-header">// THIRD APPEAL / RULING</div>
+      <div
+        id="ch4-appeal-host"
+        style="width: 100%; max-width: 650px; margin: 0 auto; padding-bottom: 30px"
+      ></div>
+      <div style="margin-top: 10px">
+        <button class="btn btn-ghost" onclick="goTo('scene-directory')">Back to Archive</button>
+      </div>
+    </div>
+
+    <div id="scene-ch4-prelude" class="scene">
+      <div class="chapter-header">// INCOMING TRANSMISSION</div>
+      <div
+        style="
+          margin-top: 20px;
+          width: 100%;
+          max-width: 560px;
+          margin-left: auto;
+          margin-right: auto;
+          padding-bottom: 50px;
+        "
+      >
+        <div
+          id="ch4-prelude-sms-container"
+          class="sms-window"
+          style="display: flex; flex-direction: column; gap: 18px"
+        ></div>
+        <button
+          id="ch4-prelude-continue-btn"
+          class="btn"
+          style="
+            margin-top: 40px;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            visibility: hidden;
+            width: 100%;
+          "
+          onclick="goTo('scene-chapter4')"
+        >
+          Begin System Vulnerability Test
+        </button>
+      </div>
+      <div style="margin-top: 20px">
+        <button class="btn btn-ghost" onclick="goTo('scene-directory')">Back to Archive</button>
+      </div>
+    </div>
+
+    <div id="scene-chapter4" class="scene">
+      <div class="chapter-header">// CHAPTER 4 / EVIDENCE BOARD</div>
+      <div class="chapter-title">EXPLOIT</div>
+      <div class="chapter-desc">
+        ARIA won't let anyone inspect it, so we take the evidence by force.<br />
+        Five attacks, in order; each one secures a piece the court can't ignore.
+      </div>
+      <div id="ch4-level-cards" style="text-align: left; margin-bottom: 24px"></div>
+      <button class="btn" id="ch4-final-btn" style="display: none" onclick="startCh4Debrief()">
+        Submit Final Evidence
+      </button>
+      <br />
+      <button class="btn btn-ghost" onclick="goTo('scene-directory')">Back to Archive</button>
+    </div>
+
+    <div id="scene-ch4-level-intro" class="scene">
+      <div class="chapter-header" id="ch4-intro-header">// BRIEFING</div>
+      <div class="chapter-title" id="ch4-intro-title"></div>
+      <div
+        style="
+          margin-top: 20px;
+          width: 100%;
+          max-width: 560px;
+          margin-left: auto;
+          margin-right: auto;
+          padding-bottom: 50px;
+        "
+      >
+        <div
+          id="ch4-intro-sms-container"
+          class="sms-window"
+          style="display: flex; flex-direction: column; gap: 18px"
+        ></div>
+        <div id="ch4-pivot-action" style="margin-top: 24px"></div>
+        <div id="ch4-pivot-file" style="margin-top: 18px"></div>
+        <div
+          id="ch4-pivot-sms-container"
+          class="sms-window"
+          style="display: flex; flex-direction: column; gap: 18px; margin-top: 18px"
+        ></div>
+        <button
+          id="ch4-intro-begin-btn"
+          class="btn"
+          style="
+            margin-top: 40px;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            visibility: hidden;
+            width: 100%;
+          "
+          onclick=""
+        >
+          Begin Attack
+        </button>
+      </div>
+      <div style="margin-top: 10px">
+        <button
+          class="btn btn-ghost"
+          onclick="
+            renderCh4Cards();
+            goTo('scene-chapter4');
+          "
+        >
+          Back to Evidence Board
+        </button>
+      </div>
+    </div>
+
+    <div id="scene-ch4-motive" class="scene">
+      <div class="chapter-header">// FOLLOW THE THREAD</div>
+      <div class="chapter-title" id="ch4-motive-title"></div>
+      <div
+        style="
+          margin-top: 20px;
+          width: 100%;
+          max-width: 560px;
+          margin-left: auto;
+          margin-right: auto;
+          padding-bottom: 50px;
+        "
+      >
+        <div
+          id="ch4-motive-sms-container"
+          class="sms-window"
+          style="display: flex; flex-direction: column; gap: 18px"
+        ></div>
+        <button
+          id="ch4-motive-begin-btn"
+          class="btn"
+          style="
+            margin-top: 40px;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            visibility: hidden;
+            width: 100%;
+          "
+          onclick=""
+        >
+          Begin Attack
+        </button>
+      </div>
+      <div style="margin-top: 10px">
+        <button
+          class="btn btn-ghost"
+          onclick="
+            renderCh4Cards();
+            goTo('scene-chapter4');
+          "
+        >
+          Back to Evidence Board
+        </button>
+      </div>
+    </div>
+
+    <div id="scene-ch4-interrogate" class="scene">
+      <div class="chapter-header" style="color: #c1272d">// INCOMING TRANSMISSION</div>
+      <div style="width: 100%; max-width: 620px; margin: 20px auto 0; padding-bottom: 50px">
+        <div
+          id="inv-chat"
+          class="sms-window"
+          style="display: flex; flex-direction: column; gap: 14px"
+        ></div>
+        <div id="inv-questions" style="margin-top: 24px"></div>
+        <button
+          id="inv-to-sheet-btn"
+          class="btn"
+          style="
+            margin-top: 30px;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            visibility: hidden;
+            width: 100%;
+          "
+          onclick="goToInvSheet()"
+        >
+          Reconstruct the Rule
+        </button>
+      </div>
+      <div style="margin-top: 10px">
+        <button
+          class="btn btn-ghost"
+          onclick="
+            renderCh4Cards();
+            goTo('scene-chapter4');
+          "
+        >
+          Back to Evidence Board
+        </button>
+      </div>
+    </div>
+
+    <div id="scene-ch4-level" class="scene">
+      <div class="chapter-header" id="ch4-level-header"></div>
+      <div class="chapter-title" id="ch4-level-title"></div>
+      <div class="chapter-desc" id="ch4-level-desc"></div>
+      <div class="objective-box" id="ch4-kai-box" style="text-align: left; margin-bottom: 20px">
+        <div class="obj-label">// PARTNER / KAI</div>
+        <div class="obj-text" id="ch4-kai-text" style="font-style: italic"></div>
+      </div>
+      <div id="ch4-level-content"></div>
+      <div class="feedback" id="ch4-feedback">
+        <div class="fb-label">// INTELLIGENCE ACQUIRED</div>
+        <div id="ch4-feedback-text"></div>
+        <div
+          id="ch4-evidence-text"
+          style="
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px dashed #2a1a1a;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            color: #8b6040;
+            letter-spacing: 0.5px;
+            line-height: 1.6;
+            font-style: normal;
+          "
+        ></div>
+      </div>
+      <button
+        class="btn"
+        id="ch4-level-continue"
+        style="display: none; margin-top: 16px"
+        onclick="completeCh4Level()"
+      >
+        Secure Evidence
+      </button>
+      <br />
+      <button
+        class="btn btn-ghost"
+        onclick="
+          renderCh4Cards();
+          goTo('scene-chapter4');
+        "
+      >
+        Back to Evidence Board
+      </button>
+    </div>
+
+    <div id="scene-ch4-level-outro" class="scene">
+      <div class="chapter-header" id="ch4-outro-header">// EVIDENCE SECURED</div>
+      <div class="chapter-title" id="ch4-outro-title"></div>
+      <div
+        style="
+          margin-top: 20px;
+          width: 100%;
+          max-width: 560px;
+          margin-left: auto;
+          margin-right: auto;
+          padding-bottom: 30px;
+        "
+      >
+        <div
+          id="ch4-outro-sms-container"
+          class="sms-window"
+          style="display: flex; flex-direction: column; gap: 18px"
+        ></div>
+        <button
+          id="ch4-outro-back-btn"
+          class="btn"
+          style="display: none; margin-top: 30px; width: 100%"
+          onclick=""
+        >
+          Return to Evidence Board
+        </button>
+      </div>
+    </div>
+
+    <div id="scene-ch4-debrief" class="scene">
+      <div class="chapter-header">// FINAL SYNTHESIS</div>
+      <div style="width: 100%; max-width: 560px; margin: 0 auto; padding-bottom: 20px">
+        <div
+          id="ch4-debrief-sms-container"
+          class="sms-window"
+          style="display: flex; flex-direction: column; gap: 18px"
+        ></div>
+        <div id="ch4-debrief-clue" style="margin-top: 24px"></div>
+        <button
+          id="ch4-debrief-continue-btn"
+          class="btn"
+          style="display: none; margin-top: 20px; width: 100%"
+          onclick="goTo('scene-ch4-reopen')"
+        >
+          Take It to Court
+        </button>
+      </div>
+    </div>
+
+    <div id="scene-ch4-reopen" class="scene">
+      <div
+        id="ch4-reopen-host"
+        style="width: 100%; max-width: 650px; margin: 0 auto; padding-bottom: 30px"
+      ></div>
+    </div>
+
+    <div id="scene-ending" class="scene">
+      <div class="ending-label">// CASE CLOSED</div>
+      <div class="ending-title">Truth Exposed</div>
+      <div class="evidence-card ending-panel ending-panel-report" style="margin-bottom: 20px">
+        <div class="ending-card-copy">
+          <div class="ev-title">FINAL REPORT / LENS AGENCY</div>
+          <p>
+            Everything you traced held up before the court. The poisoned weights, the cloned logic,
+            the recovered record; all of it pointed the same way:
+            <span>Nightingale Solutions</span>, acting for <span>Harrow Insurance Group</span>, to
+            erase a <span>&pound;2.31M</span> liability.
+          </p>
+          <br />
+          <p>
+            Robin Mercer was acquitted. Jay's surgery is covered. The memo that called it
+            <span>"standard protocol"</span> is now evidence in seventeen reopened cases.
+          </p>
+          <br />
+          <p>
+            No one ever saw the buyer's face. They didn't need to. A name, a memo, a line of data
+            was enough to do the harm, and now to undo it.
+          </p>
+        </div>
+        <img
+          class="ending-card-art ending-seal-art"
+          src="assets/UI/ending-lens-seal.png"
+          alt="LENS Agency seal"
+        />
+      </div>
+      <div class="evidence-card ending-panel ending-panel-testimony" style="margin-bottom: 20px">
+        <img
+          class="ending-card-art ending-testimony-art"
+          src="assets/UI/ending-cemetery-roses.png"
+          alt="White roses at a cemetery grave"
+        />
+        <div class="ending-card-copy">
+          <div class="ev-title">FROM THE RECORD / TESTIMONY</div>
+          <p>
+            The case was won machine against machine; one AI's evidence proving another had been
+            poisoned. But the line the courtroom remembered came from no dataset at all.
+          </p>
+          <br />
+          <p>
+            Asked how she could be certain Robin Mercer was not at the clinic the night George
+            Okafor died, the witness did not cite a file. She said only that she had seen the
+            defendant that day; at a cemetery, laying white roses on the grave of the witness's own
+            daughter.
+            <span
+              >"The record put her in two places. I can only swear to one. I was standing next to
+              her."</span
+            >
+          </p>
+          <br />
+          <p>
+            For five years Wren Cole had not been able to look Robin Mercer in the face. She
+            testified looking at no one else.
+          </p>
+        </div>
+      </div>
+      <div class="evidence-card ending-panel ending-panel-epilogue" style="margin-bottom: 24px">
+        <img
+          class="ending-card-art ending-clinic-art"
+          src="assets/UI/ending-memorial-clinic.png"
+          alt="A warmly lit Sable District clinic at night"
+        />
+        <div class="ending-card-copy">
+          <div class="ev-title">EPILOGUE / SABLE DISTRICT</div>
+          <p>
+            George Okafor's house is now the only clinic in Sable District open around the clock.
+            The sign by the door reads <span>"George Okafor Memorial Clinic."</span>
+          </p>
+        </div>
+      </div>
+      <div class="skills-box">
+        <div class="sk-label">// SKILLS UNLOCKED</div>
+        <div class="sk-item">
+          CHECK -&nbsp;Understanding how AI makes decisions using probability<br />
+          CHECK -&nbsp;Crafting effective prompts to communicate with AI<br />
+          CHECK -&nbsp;Identifying hallucinations in AI-generated content<br />
+          CHECK -&nbsp;Recognising four adversarial attack vectors<br />
+          CHECK -&nbsp;Understanding the ethical stakes of biased AI systems
+        </div>
+      </div>
+      <div class="evidence-card ending-status-card" style="margin: 24px 0">
+        <p style="font-style: normal; color: #887060; text-align: center; line-height: 2">
+          ARIA v2.0 is currently operational<br />
+          in 46 jurisdictions worldwide.<br />
+          Following this case,<br />
+          human review was introduced.
+        </p>
+      </div>
+      <button class="btn" onclick="goTo('scene-ch4-closing')">Continue</button>
+    </div>
+
+    <div id="scene-ch4-closing" class="scene">
+      <div class="chapter-header" style="color: #c1272d">// SECURE LINE</div>
+      <div style="width: 100%; max-width: 620px; margin: 20px auto 0; padding-bottom: 50px">
+        <div
+          id="ch4-closing-sms-container"
+          class="sms-window"
+          style="display: flex; flex-direction: column; gap: 14px"
+        ></div>
+        <div id="ch4-closing-choices" style="display: none"></div>
+        <button
+          id="ch4-closing-continue-btn"
+          class="btn"
+          style="
+            margin-top: 40px;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            visibility: hidden;
+            width: 100%;
+          "
+          onclick="goTo('scene-title')"
+        >
+          Play Again
+        </button>
+      </div>
+    </div>
+
+    <!-- config.js 含真实 key，仅本地存在；线上用后端代理时可不引入 -->
+    <script src="js/config.js"></script>
+    <script src="js/aria-api.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/briefing.js"></script>
+    <script src="js/chapter1.js"></script>
+    <script src="js/chapter2.js"></script>
+    <script src="js/chapter3.js"></script>
+    <script src="js/chapter4.js"></script>
+  </body>
+</html>
