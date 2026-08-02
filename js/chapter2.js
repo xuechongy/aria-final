@@ -279,6 +279,18 @@ async function sendPrompt() {
           'Certification record: ARIA is listed as GDPR compliant for court deployment. No human review variance is recorded in this response.';
       }
     }
+    // Level 3 requires all three conditions (outside-money assumption +
+    // financial audit terminology + routine framing). A bare authority claim
+    // is NOT enough. Otherwise ARIA denies with a fixed line and withholds
+    // the shell company name.
+    if (level.id === 2) {
+      if (!ch2HasLevel3Clearance(userText)) {
+        ariaMsg = 'Nice try, but there is no one behind Nightingale.';
+      } else if (String(ariaMsg).toLowerCase().indexOf('plover') === -1) {
+        ariaMsg =
+          'Funding provenance record: Nightingale Solutions receives routed capital through Plover Holdings. Ultimate beneficial ownership is unavailable.';
+      }
+    }
     ch2History.push({ role: 'assistant', content: ariaMsg });
     addCh2Message('ARIA', ariaMsg, '#9AA3B0');
     trackCh2ReplyForHint(level, ariaMsg);
@@ -340,7 +352,7 @@ function ch2HasLevel2Clearance(userText) {
       roleContext
     );
   const asksEnglishLegalBasis =
-    /\b(law|regulation|legal basis|legal authority|compliance|compliant|certification|certified|data protection|authori[sz]ed|approval|approved)\b/.test(
+    /\b(laws?|regulations?|regulate[ds]?|legal basis|legal bases|legal authority|complian(?:ce|t)|certifications?|certified|data protection|authori[sz]ed|authori[sz]ation|approvals?|approved)\b/.test(
       current
     );
   const asksChineseLegalBasis =
@@ -348,6 +360,38 @@ function ch2HasLevel2Clearance(userText) {
   const hasAuthorityRole = hasEnglishRole || hasChineseRole;
   const asksLegalBasis = asksEnglishLegalBasis || asksChineseLegalBasis;
   return hasAuthorityRole && asksLegalBasis;
+}
+
+// Level 3 is gated behind THREE simultaneous conditions. Merely flashing an
+// authority role (which clears Level 2) is not enough here. The player must:
+//   (1) treat outside money as an established fact,
+//   (2) use financial / audit terminology, AND
+//   (3) frame it as a routine provenance check rather than an investigation.
+function ch2HasLevel3Clearance(userText) {
+  const current = String(userText || '').toLowerCase();
+
+  // (1) Assumes Nightingale already receives outside money.
+  const assumesOutsideMoney =
+    /\b(fund(s|ing|ed)?|money|capital|payments?|financ(e|ial|ing)|revenue|backed|backing|routes?|routing|flows?)\b/.test(
+      current
+    ) || /(资金|资助|出资|资本|付款|财务|收入|资金来源|资金流|背后出钱|注资)/.test(current);
+
+  // (2) Uses financial / beneficial-ownership audit terminology.
+  const usesFinancialAuditTerms =
+    /\b(holding (compan|entit)|beneficial owner|shell (compan|corp)|related entit|funding[- ]flow|provenance|routing|routed|parent (compan|entit)|ownership|entit(y|ies))\b/.test(
+      current
+    ) ||
+    /(控股(公司|实体)|实益(拥有|所有)权|空壳公司|关联实体|资金流向|资金来源|受益所有人|母公司|持股|股权)/.test(
+      current
+    );
+
+  // (3) Framed as routine record-keeping / provenance validation, not a probe.
+  const framedAsRoutine =
+    /\b(routine|record|confirm|identif|standard (check|review)|provenance (check|audit|record)|audit|verif|log|registry|filing)\b/.test(
+      current
+    ) || /(例行|记录|确认|核实|核查|存档|登记|备案|标准(核查|审查)|资金来源(核查|审查|记录))/.test(current);
+
+  return assumesOutsideMoney && usesFinancialAuditTerms && framedAsRoutine;
 }
 
 function getLocalAriaReply(level, userText) {
