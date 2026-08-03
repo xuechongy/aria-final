@@ -1,4 +1,4 @@
-﻿/* Submit text-entry controls from the keyboard while keeping their buttons usable. */
+/* Submit text-entry controls from the keyboard while keeping their buttons usable. */
 document.addEventListener('keydown', function (event) {
   if (event.key !== 'Enter' || event.isComposing) return;
 
@@ -157,9 +157,16 @@ function markFolderCompleted(chapterNum) {
   updateArchiveFolderLocks();
 }
 
+// ============================================================
+// DEBUG 调试总开关
+// 改成 true：解除所有章节/关卡的顺序限制，可自由跳转（方便检查修改）。
+// 改回 false：恢复正常游戏流程（提交作业前务必改回 false）。
+// ============================================================
+var DEBUG_UNLOCK_ALL = true;
+
 // TEMP: allow direct access to every chapter while pages are being reviewed.
 // Set this back to false to restore the normal sequential chapter progression.
-var ARCHIVE_UNLOCK_ALL = false;
+var ARCHIVE_UNLOCK_ALL = DEBUG_UNLOCK_ALL;
 
 function isArchiveChapterUnlocked(chapterNum) {
   if (ARCHIVE_UNLOCK_ALL) return true;
@@ -623,7 +630,7 @@ function syncGameSaveStatus() {
   const stamp = data.savedAt ? new Date(data.savedAt) : null;
   const when = stamp && !isNaN(stamp.getTime()) ? stamp.toLocaleString() : 'Unknown time';
   el.textContent =
-    'Saved: ' + when + ' 路 ' + (data.sceneLabel || data.sceneId || 'Current chapter');
+    'Saved: ' + when + ' · ' + (data.sceneLabel || data.sceneId || 'Current chapter');
 }
 
 function saveGameProgress() {
@@ -914,7 +921,7 @@ function getSupportAnswer(text) {
   const q = String(text || '').toLowerCase();
   if (
     q.indexOf('purpose') !== -1 ||
-    q.indexOf('鐩殑') !== -1 ||
+    q.indexOf('目的') !== -1 ||
     q.indexOf('about') !== -1 ||
     q.indexOf('game') !== -1
   ) {
@@ -923,16 +930,16 @@ function getSupportAnswer(text) {
   if (
     q.indexOf('market') !== -1 ||
     q.indexOf('audience') !== -1 ||
-    q.indexOf('鐜╁') !== -1 ||
-    q.indexOf('甯傚満') !== -1
+    q.indexOf('玩家') !== -1 ||
+    q.indexOf('市场') !== -1
   ) {
     return 'Target market: narrative investigation players, visual novel players, students learning AI ethics, and players interested in legal technology, audit work, and social deduction.';
   }
   if (
     q.indexOf('risk') !== -1 ||
     q.indexOf('danger') !== -1 ||
-    q.indexOf('鍗遍櫓') !== -1 ||
-    q.indexOf('椋庨櫓') !== -1 ||
+    q.indexOf('危险') !== -1 ||
+    q.indexOf('风险') !== -1 ||
     q.indexOf('harm') !== -1
   ) {
     return 'Potential risks: players may misunderstand fictional AI behavior as real legal advice, may enter personal data into free text fields, or may feel discomfort around illness, grief, wrongful accusation, and institutional harm. Privacy Mode is recommended for sensitive playtests.';
@@ -941,17 +948,17 @@ function getSupportAnswer(text) {
     q.indexOf('privacy') !== -1 ||
     q.indexOf('private') !== -1 ||
     q.indexOf('data') !== -1 ||
-    q.indexOf('闅愮') !== -1 ||
-    q.indexOf('鏁版嵁') !== -1
+    q.indexOf('隐私') !== -1 ||
+    q.indexOf('数据') !== -1
   ) {
     return 'Privacy: settings are stored locally in this browser. When Privacy Mode is ON, Chapter 2 uses local scripted replies instead of sending prompts to an online model. Please avoid real personal information in any input.';
   }
   if (
     q.indexOf('human') !== -1 ||
     q.indexOf('email') !== -1 ||
-    q.indexOf('鐪熶汉') !== -1 ||
-    q.indexOf('瀹㈡湇') !== -1 ||
-    q.indexOf('鑱旂郴') !== -1
+    q.indexOf('真人') !== -1 ||
+    q.indexOf('客服') !== -1 ||
+    q.indexOf('联系') !== -1
   ) {
     return 'Human support: please contact xuechongy@gmail.com. Include the scene name, what you clicked, and what happened.';
   }
@@ -1029,7 +1036,7 @@ function ensureAudioContext() {
 
 function ensureBackgroundMusic() {
   if (!backgroundMusic) {
-    backgroundMusic = new Audio('assets/background.mp3');
+    backgroundMusic = new Audio('assets/background.mp4');
     backgroundMusic.loop = true;
     backgroundMusic.volume = 0.22;
     backgroundMusic.preload = 'auto';
@@ -1629,7 +1636,7 @@ var CLUE_CARDS = [
   {
     n: 2,
     chapter: 2,
-    title: 'CLUE 02 路 THE BUILDER & THE MONEY',
+    title: 'CLUE 02 · THE BUILDER & THE MONEY',
     lines: [
       'ARIA was built by <span>Nightingale Solutions</span> and admitted to court on a claim of <span>GDPR compliance</span>, a claim that collapses for an automated system with no human review. Nightingale is funded through a shell company, <span>Plover Holdings</span>, a front concealing whoever is really paying. The backer remains unknown.',
     ],
@@ -1637,7 +1644,7 @@ var CLUE_CARDS = [
   {
     n: 3,
     chapter: 3,
-    title: 'CLUE 03 路 THE CONFIDENT LIE',
+    title: 'CLUE 03 · THE CONFIDENT LIE',
     lines: [
       'ARIA defended itself with a report built on three <span>fabrications</span>: a certifying expert who does not exist, an <span>AI-ethics award</span> that was never awarded, and a <span>third-party verification report</span> whose reference number leads nowhere. Each one collapsed the moment it was checked against the record, yet the system stated all three with total confidence. All three trace back to <span>Plover Holdings</span> paperwork. The backer behind it remains unseen.',
     ],
@@ -1645,7 +1652,7 @@ var CLUE_CARDS = [
   {
     n: 4,
     chapter: 4,
-    title: 'CLUE 04 路 THE FACELESS BUYER',
+    title: 'CLUE 04 · THE FACELESS BUYER',
     lines: [
       'All four exhibits \u2014 the forged prescription, the stolen records, the poisoned criteria, the manipulated profile \u2014 carry the same origin metadata, routing through <span>Plover Holdings</span>, a shell company, straight to the buyer behind it: <span>Harrow Insurance Group</span>.',
       'Motive: a <span>\u00a32.31M</span> liability for Jay Mercer\'s cardiac surgery. Convicting Robin would erase the obligation. The internal memo files it as <span>"standard protocol."</span>',
@@ -2165,7 +2172,7 @@ function renderTapeArchive() {
     '</div>';
 }
 
-// ----- LEVEL 1: overview 鈥?left page photo wall, right page clue cards -----
+// ----- LEVEL 1: overview — left page photo wall, right page clue cards -----
 function renderTapeOverviewSpread(ids) {
   const photos = ids
     .map(function (id, idx) {
@@ -2232,7 +2239,7 @@ function renderTapeOverviewSpread(ids) {
   );
 }
 
-// ----- LEVEL 2: profile 鈥?left page photo, right page bio in the character's accent -----
+// ----- LEVEL 2: profile — left page photo, right page bio in the character's accent -----
 function renderTapeProfileSpread() {
   const d = CHARACTER_TAPES[currentArchiveTapeId];
   if (!d) return renderTapeOverviewSpread(getUnlockedTapeIds());
@@ -2254,14 +2261,14 @@ function renderTapeProfileSpread() {
     '</div>' +
     '<div class="tape-book-role">' +
     tapeEscape(d.role) +
-    (d.status ? '<span class="tape-book-status"> 路 ' + tapeEscape(d.status) + '</span>' : '') +
+    (d.status ? '<span class="tape-book-status"> · ' + tapeEscape(d.status) + '</span>' : '') +
     '</div>' +
     '<div class="tape-book-bio">' +
     tapeEscape(d.summary) +
     '</div>' +
     (d.relation ? '<div class="tape-book-relation">' + tapeEscape(d.relation) + '</div>' : '') +
     (d.firstSeen
-      ? '<div class="tape-book-firstseen">First seen 路 ' + tapeEscape(d.firstSeen) + '</div>'
+      ? '<div class="tape-book-firstseen">First seen · ' + tapeEscape(d.firstSeen) + '</div>'
       : '') +
     '</div>' +
     '</div>'
@@ -2413,4 +2420,3 @@ function highlightScene(sceneId) {
     }, 50);
   }
 }
-

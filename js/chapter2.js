@@ -98,7 +98,8 @@ function renderCh2LevelSelect() {
 
   CH2_LEVELS.forEach(function (level) {
     const cleared = ch2LevelsCleared[level.id];
-    const unlocked = cleared || level.id === nextLevel;
+    const debugOpen = typeof DEBUG_UNLOCK_ALL !== 'undefined' && DEBUG_UNLOCK_ALL;
+    const unlocked = debugOpen || cleared || level.id === nextLevel;
 
     const card = document.createElement('button');
     card.type = 'button';

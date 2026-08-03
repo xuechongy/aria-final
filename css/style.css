@@ -8528,3 +8528,9 @@ colour text). Book art: ../assets/UI/book-spread-enhanced.png (1536x1024). Paper
     order: 2;
   }
 }
+
+/* 第四章处方关：待拾取放大镜的呼吸提示动画 */
+@keyframes rxPickupPulse {
+  0%, 100% { transform: scale(1) rotate(-8deg); opacity: 0.9; }
+  50% { transform: scale(1.08) rotate(-8deg); opacity: 1; }
+}

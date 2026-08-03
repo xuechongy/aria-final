@@ -1,13 +1,6 @@
 /**
  * config.example.js — 配置模板。
  *
- * 用法：
- *   复制本文件为 config.js，填入你的真实配置，然后在 index.html 中引入 config.js。
- *   config.js 已被 .gitignore 忽略，不会提交到 GitHub，从而避免泄露 key。
- *
- * 二选一：
- */
-
 window.ARIA_CONFIG = {
   // ── 线上部署（推荐）：走后端代理，前端不持有 key ──
   // proxyUrl: 'https://your-worker.example.workers.dev',
