@@ -1036,7 +1036,7 @@ function ensureAudioContext() {
 
 function ensureBackgroundMusic() {
   if (!backgroundMusic) {
-    backgroundMusic = new Audio('assets/background.mp4');
+    backgroundMusic = new Audio('assets/background.mp3');
     backgroundMusic.loop = true;
     backgroundMusic.volume = 0.22;
     backgroundMusic.preload = 'auto';

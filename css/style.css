@@ -4312,7 +4312,6 @@ body.settings-reduced-motion *::after {
   padding: clamp(28px, 5vw, 48px) clamp(24px, 6vw, 68px) 34px;
   background:
     linear-gradient(rgba(232, 223, 192, 0.78), rgba(232, 223, 192, 0.78)),
-    url('../assets/bg-letter.png') center/cover no-repeat,
     #e8dfc0;
   border: 9px solid #4a2c1e;
   outline: 2px solid rgba(0, 0, 0, 0.65);
@@ -6120,7 +6119,7 @@ body.settings-under-right-button #global-settings-btn {
   width: min(46vw, 680px);
   aspect-ratio: 1.45;
   transform: translate(-50%, -50%) rotate(-2deg);
-  background: url('../assets/UI/02_text back.png') center/contain no-repeat;
+  background: url('../assets/UI/02_text_back.png') center/contain no-repeat;
   opacity: 0.42;
   filter: drop-shadow(0 22px 36px rgba(0, 0, 0, 0.52));
   pointer-events: none;
@@ -6195,7 +6194,7 @@ body.settings-under-right-button #global-settings-btn {
   width: min(82vw, 1360px) !important;
   aspect-ratio: 1.72 !important;
   transform: translate(-50%, -50%) rotate(0deg) !important;
-  background: url('../assets/UI/02_text back.png') center/contain no-repeat !important;
+  background: url('../assets/UI/02_text_back.png') center/contain no-repeat !important;
   opacity: 0.78 !important;
   filter: drop-shadow(0 24px 42px rgba(0, 0, 0, 0.58)) !important;
   pointer-events: none !important;

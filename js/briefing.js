@@ -934,7 +934,7 @@ function buildBriefingDOM() {
       width: min(46vw, 680px);
       aspect-ratio: 1.45;
       transform: translate(-50%, -50%) rotate(-2deg);
-      background: url("assets/UI/02_text back.png") center/contain no-repeat;
+      background: url("assets/UI/02_text_back.png") center/contain no-repeat;
       opacity: .42;
       filter: drop-shadow(0 22px 36px rgba(0,0,0,.52));
       pointer-events: none;
@@ -983,7 +983,7 @@ function buildBriefingDOM() {
       width: min(82vw, 1360px) !important;
       aspect-ratio: 1.72 !important;
       transform: translate(-50%, -50%) rotate(0deg) !important;
-      background: url("assets/UI/02_text back.png") center/contain no-repeat !important;
+      background: url("assets/UI/02_text_back.png") center/contain no-repeat !important;
       opacity: .78 !important;
       filter: drop-shadow(0 24px 42px rgba(0,0,0,.58)) !important;
       pointer-events: none !important;
@@ -1159,7 +1159,6 @@ function buildBriefingDOM() {
 
 const AVATARS = {
   aria: 'assets/char-aria.png',
-  lens: 'assets/char-lens.png',
   robin: 'assets/char-robin.png',
   kai: 'assets/char-kai.png',
   wren: 'assets/char-wren-silhouette.png',
