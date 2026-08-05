@@ -328,7 +328,7 @@ function renderCh4Cards() {
     const left = document.createElement('div');
     const titleEl = document.createElement('div');
     titleEl.className = 'lc-title';
-    titleEl.textContent = (level.completed ? '✓ ' : unlocked ? '' : '🔒 ') + level.title;
+    titleEl.textContent = (level.completed ? '✓ ' : '') + level.title;
 
     const descEl = document.createElement('div');
     descEl.className = 'lc-desc';
@@ -3042,45 +3042,3 @@ function startCh4Debrief() {
 }
 
 renderCh4Cards();
-// Feature-detect the (vendor-prefixed) Web Speech API. Returns null if absent.
-function getSpeechRecognition() {
-  return window.SpeechRecognition || window.webkitSpeechRecognition || null;
-}
-
-function initVoiceInput() {
-  const micBtn = document.getElementById('ch2-mic-btn');
-  if (!micBtn) return;
-
-  const SpeechRecognitionClass = getSpeechRecognition();
-  if (!SpeechRecognitionClass) {
-    // Unsupported browser (e.g. Firefox): disable the button and explain,
-    // instead of letting it fail silently when clicked.
-    micBtn.disabled = true;
-    micBtn.style.opacity = '0.4';
-    micBtn.title = 'Voice input not supported in this browser. Use Chrome or Edge.';
-    return;
-  }
-
-  recognition = new SpeechRecognitionClass();
-  recognition.lang = voiceLang;          // 'en-US' by default; puzzle keywords are English
-  recognition.interimResults = false;    // deliver only the final transcript
-  recognition.continuous = false;
-
-  // Key interaction decision: place the recognised text INTO the input field and
-  // let the player review/edit it, rather than sending automatically. Chapter 2's
-  // puzzles hinge on exact wording, so an unverified transcript could waste a valid
-  // attempt; a manual send keeps the player in control.
-  recognition.onresult = function (event) {
-    const transcript = event.results[0][0].transcript;
-    const input = document.getElementById('ch2-input');
-    if (input) {
-      input.value = input.value ? input.value + ' ' + transcript : transcript;
-      input.focus();
-    }
-  };
-
-  // Recover cleanly from a denied microphone permission, and always reset the
-  // button state when recognition ends.
-  recognition.onerror = function (event) { /* ... reset button; alert if not-allowed ... */ };
-  recognition.onend   = function ()      { isListening = false; resetMicButton(); };
-}
