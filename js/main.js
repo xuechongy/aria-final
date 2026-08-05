@@ -162,7 +162,7 @@ function markFolderCompleted(chapterNum) {
 // 改成 true：解除所有章节/关卡的顺序限制，可自由跳转（方便检查修改）。
 // 改回 false：恢复正常游戏流程（提交作业前务必改回 false）。
 // ============================================================
-var DEBUG_UNLOCK_ALL = true;
+var DEBUG_UNLOCK_ALL = false;
 
 // TEMP: allow direct access to every chapter while pages are being reviewed.
 // Set this back to false to restore the normal sequential chapter progression.
