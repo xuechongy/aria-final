@@ -158,9 +158,10 @@ function markFolderCompleted(chapterNum) {
 }
 
 // ============================================================
-// DEBUG 调试总开关
-// 改成 true：解除所有章节/关卡的顺序限制，可自由跳转（方便检查修改）。
-// 改回 false：恢复正常游戏流程（提交作业前务必改回 false）。
+// DEBUG master switch.
+// Set to true: remove all chapter/level sequence restrictions for free navigation
+// (useful while reviewing/editing).
+// Set back to false: restore normal game flow (MUST be false before submission).
 // ============================================================
 var DEBUG_UNLOCK_ALL = false;
 
@@ -918,6 +919,8 @@ function sendSupportMessage() {
 }
 
 function getSupportAnswer(text) {
+  // In-game help/support Q&A. Keyword matching supports both English and Chinese
+  // terms (e.g. 'purpose' / '目的') so the help works for bilingual players.
   const q = String(text || '').toLowerCase();
   if (
     q.indexOf('purpose') !== -1 ||

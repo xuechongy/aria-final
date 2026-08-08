@@ -27,7 +27,7 @@ function playCh4Applause() {
   }
 }
 
-// 跟随 main.js 的 DEBUG_UNLOCK_ALL 总开关（main.js 先加载）。
+// Follows the DEBUG_UNLOCK_ALL switch in main.js (loaded first).
 var CH4_UNLOCK_ALL = typeof DEBUG_UNLOCK_ALL !== 'undefined' ? DEBUG_UNLOCK_ALL : false;
 
 var ch4Levels = [
@@ -485,17 +485,17 @@ function renderCh4LevelContent(level) {
           <div id="rx-stage" style="position:relative;width:380px;height:440px;margin:0 auto;">
             <canvas id="rx-canvas" width="380" height="440" style="border:1px solid #3A1A1A;border-radius:2px;display:block;background:#0D0D0D;"></canvas>
             <canvas id="rx-hl" width="380" height="440" style="position:absolute;top:0;left:0;border-radius:2px;pointer-events:none;"></canvas>
-            <!-- 跟随鼠标的放大镜（图片形式），拾取后才显示 -->
+            <!-- Cursor-following magnifier (image); shown only after pickup -->
             <div id="rx-loupe" style="position:absolute;top:0;left:0;width:210px;height:171px;display:none;pointer-events:none;z-index:5;">
-              <!-- 镜片内放大画面：定位到放大镜图片的镜片圆 -->
+              <!-- Magnified view inside the lens: aligned to the glass circle of the image -->
               <canvas id="rx-loupe-canvas" width="112" height="112" style="position:absolute;left:112px;top:14px;width:78px;height:78px;border-radius:50%;image-rendering:pixelated;"></canvas>
               <img src="assets/magnifier.png" alt="magnifier" style="position:absolute;top:0;left:0;width:210px;height:171px;pointer-events:none;" />
             </div>
-            <!-- 静止待拾取的放大镜，放在处方右侧 -->
+            <!-- Static magnifier waiting to be picked up, placed beside the record -->
             <div id="rx-pickup" style="position:absolute;left:-175px;top:150px;width:200px;height:162px;cursor:pointer;z-index:8;text-align:center;">
               <img src="assets/magnifier.png" alt="pick up magnifier" style="width:185px;height:150px;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.7));animation:rxPickupPulse 1.8s ease-in-out infinite;" />
             </div>
-            <!-- 可疑点弹窗：跟随点击点, 出现在放大镜旁 -->
+            <!-- Suspect-point popup: appears next to the clicked point -->
             <div id="rx-popup" style="display:none;position:absolute;z-index:60;width:250px;background:#140A0A;border:1px solid #C1272D;border-radius:3px;padding:13px 15px;box-shadow:0 8px 30px rgba(0,0,0,0.8);text-align:left;">
               <div id="rx-popup-tag" style="font-family:Arial,sans-serif;font-size:10px;letter-spacing:2px;color:#C1272D;margin-bottom:8px;">// SUSPECT POINT</div>
               <div id="rx-popup-text" style="font-size:12.5px;color:#C8C0B0;line-height:1.7;font-style:italic;"></div>
@@ -616,7 +616,7 @@ var rxFlags = [
 var rxConf = 0.99;
 var rxConfSteps = [0.99, 0.66, 0.31, 0.05];
 var rxHoverIdx = -1;
-var rxLoupePicked = false; // 放大镜是否已被拾取
+var rxLoupePicked = false; // whether the magnifier has been picked up
 
 function initRxAttack() {
   rxFlags.forEach(function (f) {
@@ -639,11 +639,11 @@ function initRxAttack() {
   const pickup = document.getElementById('rx-pickup');
   if (!stage || !loupe) return;
 
-  // 放大镜是否已被拾取。未拾取时鼠标移动不跟随。
+  // Whether the magnifier has been picked up. It does not follow until picked up.
   rxLoupePicked = false;
-  loupe.style.display = 'none'; // 跟随放大镜先隐藏
+  loupe.style.display = 'none'; // hide the following magnifier initially
   stage.style.cursor = 'default';
-  if (pickup) pickup.style.display = 'block'; // 待拾取放大镜显示
+  if (pickup) pickup.style.display = 'block'; // show the pickup magnifier
 
   // 点击静止的放大镜 → 拾取，立刻跟到鼠标位置（消除跳转）。
   if (pickup) {
@@ -651,16 +651,16 @@ function initRxAttack() {
       e.stopPropagation();
       rxLoupePicked = true;
       pickup.style.display = 'none';
-      stage.style.cursor = 'none'; // 隐藏系统光标，用放大镜图片代替
+      stage.style.cursor = 'none'; // hide the system cursor; the magnifier image replaces it
       loupe.style.display = 'block';
-      // 用当前鼠标位置立刻定位，避免从左上角跳过来。
+      // Position at the current cursor immediately to avoid a jump from the corner.
       const rect = stage.getBoundingClientRect();
       moveRxLoupe(e.clientX - rect.left, e.clientY - rect.top);
     };
   }
 
   stage.onmousemove = function (e) {
-    if (!rxLoupePicked) return; // 未拾取不跟随
+    if (!rxLoupePicked) return; // do not follow until picked up
     const rect = stage.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -672,11 +672,11 @@ function initRxAttack() {
 
   stage.onmouseleave = function () {
     rxHoverIdx = -1;
-    // 拾取后离开舞台时把放大镜停在边缘（不隐藏，保持"拿在手上"的感觉）
+    // When leaving the stage after pickup, keep the magnifier at the edge (stays "in hand")
   };
 
   stage.onclick = function (e) {
-    if (!rxLoupePicked) return; // 必须先拾取放大镜
+    if (!rxLoupePicked) return; // the magnifier must be picked up first
     const rect = stage.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -811,24 +811,24 @@ function moveRxLoupe(x, y) {
   const src = document.getElementById('rx-canvas');
   if (!loupe || !lc || !src) return;
 
-  // 放大镜图片容器 210x171，镜片圆心约在 (151, 53)。
-  // 让镜片圆心对准鼠标：容器左上角 = 鼠标 - 镜片圆心偏移。
-  const LENS_CX = 151; // 镜片圆心 x（相对容器）
-  const LENS_CY = 53; // 镜片圆心 y（相对容器）
+  // Magnifier image container is 210x171; glass centre is about (151, 53).
+  // Align the glass centre to the cursor: top-left = cursor - lens-centre offset.
+  const LENS_CX = 151; // glass centre x (relative to container)
+  const LENS_CY = 53; // glass centre y (relative to container)
   loupe.style.left = x - LENS_CX + 'px';
   loupe.style.top = y - LENS_CY + 'px';
 
-  // 在镜片圆内绘制放大画面（放大约 3.3 倍）。
+  // Draw the magnified view inside the lens circle (~3.3x).
   const ctx = lc.getContext('2d');
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, 112, 112);
 
-  const SRC_SIZE = 34; // 从源图取 34px 方块
+  const SRC_SIZE = 34; // sample a 34px square from the source
   const sx = Math.max(0, Math.min(380 - SRC_SIZE, x - SRC_SIZE / 2));
   const sy = Math.max(0, Math.min(440 - SRC_SIZE, y - SRC_SIZE / 2));
   ctx.drawImage(src, sx, sy, SRC_SIZE, SRC_SIZE, 0, 0, 112, 112);
 
-  // 镜片玻璃质感：轻微噪点。
+  // glass texture: subtle grain
   for (let i = 0; i < 260; i++) {
     const px = Math.random() * 112,
       py = Math.random() * 112;
@@ -838,7 +838,7 @@ function moveRxLoupe(x, y) {
   }
 
   // 悬停在可疑点上（无论是否已标记）→ 镜片内叠加柔和的金黄光晕，
-  // 提示"这里有问题"。不需要先点对。
+  // signals "something is wrong here". No prior correct click needed.
   const hi = rxHitTest(x, y);
   if (hi >= 0) {
     const glow = ctx.createRadialGradient(56, 56, 8, 56, 56, 56);
@@ -878,7 +878,7 @@ function openRxPopup(idx, stageX, stageY) {
   pop.style.top = py + 'px';
   pop.dataset.idx = idx;
 
-  // 弹窗出现时收起放大镜、恢复系统鼠标，方便点击 Mark 按钮。
+  // When the popup opens, hide the magnifier and restore the system cursor so the Mark button is clickable.
   const loupe = document.getElementById('rx-loupe');
   if (loupe) loupe.style.display = 'none';
   stage.style.cursor = 'default';
@@ -890,7 +890,7 @@ function closeRxPopup() {
   const idx = parseInt(pop.dataset.idx, 10);
   pop.style.display = 'none';
 
-  // 恢复放大镜（若已拾取），重新隐藏系统鼠标。
+  // Restore the magnifier (if picked up) and hide the system cursor again.
   if (rxLoupePicked) {
     const loupe = document.getElementById('rx-loupe');
     const stage = document.getElementById('rx-stage');

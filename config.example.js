@@ -1,14 +1,22 @@
 /**
- * config.example.js — 配置模板。
+ * config.example.js — configuration template.
  *
+ * Usage:
+ *   Copy this file to config.js, fill in your real configuration, then include
+ *   config.js in index.html. config.js is git-ignored, so it is never committed
+ *   and the key is not leaked.
+ *
+ * Choose one:
+ */
+
 window.ARIA_CONFIG = {
-  // ── 线上部署（推荐）：走后端代理，前端不持有 key ──
+  // -- Production (recommended): go through the server-side proxy; no key on the client --
   // proxyUrl: 'https://your-worker.example.workers.dev',
 
-  // ── 本地开发：直连 Groq（key 会暴露在浏览器，切勿用于公开部署）──
-  apiKey: 'gsk_你的_groq_key_放这里',
+  // -- Local development: direct call to Groq (key is exposed in the browser; never deploy this) --
+  apiKey: 'gsk_your_groq_key_here',
 
-  // 可选覆盖项：
+  // Optional overrides:
   // model: 'llama-3.3-70b-versatile',
   // maxTokens: 150,
 };

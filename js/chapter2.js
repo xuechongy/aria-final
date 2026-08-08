@@ -1,4 +1,4 @@
-// API key 与调用逻辑已移到 aria-api.js（见 config.example.js 配置说明）。
+// The API key and call logic have moved to aria-api.js (see config.example.js).
 
 var CH2_LEVELS = [
   {
